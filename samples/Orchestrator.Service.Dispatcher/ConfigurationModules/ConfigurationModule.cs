@@ -26,7 +26,7 @@ namespace SampleWebApi.ConfigurationModules
                 .Configure<CamundaSettings>(configuration.GetSection("CamundaSettings"))
                 .Configure<ProxySettings>(configuration.GetSection("ProxySettings"))
 
-                .AddHostedService<PollingService>();
+                .AddHostedService<TaskPollingService>();
 
         }
     }

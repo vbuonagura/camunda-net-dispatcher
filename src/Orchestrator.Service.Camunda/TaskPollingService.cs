@@ -16,7 +16,7 @@ namespace Camunda.Dispatcher
     /// <summary>
     /// This helper will process all pending activities from camunda.
     /// </summary>
-    public class PollingService : BackgroundService
+    public class TaskPollingService : BackgroundService
     {
         private static IEngineClient _engineClient;
         private static IExternalTaskClientHelper _engineClientHelper;
@@ -24,7 +24,7 @@ namespace Camunda.Dispatcher
         private static ILogger _logger;
         private static CamundaSettings _camundaSettings;
 
-        public PollingService(IOptions<CamundaSettings> camundaSettings, 
+        public TaskPollingService(IOptions<CamundaSettings> camundaSettings, 
             IEngineClient engineClient,
             IExternalTaskClientHelper engineClientHelper,
             ILogger logger,
