@@ -5,7 +5,6 @@ using Camunda.Dispatcher.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SampleWebApi.Dispatchers;
-using SampleWebApi.Helpers;
 
 namespace SampleWebApi.ConfigurationModules
 {
@@ -22,6 +21,7 @@ namespace SampleWebApi.ConfigurationModules
 
                 //Instantiate external task executors
                 .AddTransient<IExternalTaskExecutor, UpdateProcessStatus>()
+                .AddTransient<IExternalTaskExecutor, RegisterAttribute>()
 
                 .Configure<CamundaSettings>(configuration.GetSection("CamundaSettings"))
                 .Configure<ProxySettings>(configuration.GetSection("ProxySettings"))

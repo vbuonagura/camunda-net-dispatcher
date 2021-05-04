@@ -16,13 +16,6 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Orchestrator.Service.Dispatcher": {
-      "commandName": "Project",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "http://localhost:5001"
-    },
     "Docker": {
       "commandName": "Docker",
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/dispatcher",
@@ -33,6 +26,9 @@
       "httpPort": 50115,
       "useSSL": true,
       "sslPort": 44372
+    },
+    "SampleWebApi": {
+      "commandName": "Project"
     }
   }
 }

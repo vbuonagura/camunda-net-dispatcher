@@ -21,19 +21,19 @@ namespace Camunda.Dispatcher
         private static IEngineClient _engineClient;
         private static IExternalTaskClientHelper _engineClientHelper;
         private static IEnumerable<IExternalTaskExecutor> _taskExecutors;
-        private static ILogger _logger;
         private static CamundaSettings _camundaSettings;
+        private readonly ILogger _logger;
 
         public TaskPollingService(IOptions<CamundaSettings> camundaSettings, 
             IEngineClient engineClient,
             IExternalTaskClientHelper engineClientHelper,
-            ILogger logger,
+            ILogger<TaskPollingService> logger,
             IEnumerable<IExternalTaskExecutor> taskExecutors)
         {
             _engineClient = engineClient;
             _engineClientHelper = engineClientHelper;
-            _logger = logger;
             _taskExecutors = taskExecutors;
+            _logger = logger;
             _camundaSettings = camundaSettings?.Value;
         }
 
@@ -43,11 +43,12 @@ namespace Camunda.Dispatcher
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                var topics = GetTopics();
+                var topics = GetTopicsFromExecutors();
 
                 foreach (var topic in topics)
                 {
                     var fetchLockedExternalTasks = new List<LockedExternalTask>();
+
                     try
                     {
                         var workerId = Guid.NewGuid().ToString();
@@ -61,7 +62,7 @@ namespace Camunda.Dispatcher
                     catch (Exception ex)
                     {
                         await UnlockExternalTask(fetchLockedExternalTasks);
-                        _logger?.LogError(ex.Message);
+                        _logger.LogError(ex.Message);
                     }
                 }
 
@@ -70,7 +71,7 @@ namespace Camunda.Dispatcher
 
         }
 
-        private static async Task UnlockExternalTask(List<LockedExternalTask> lockedExternalTasks)
+        private static async Task UnlockExternalTask(IEnumerable<LockedExternalTask> lockedExternalTasks)
         {
             foreach (var externalTask in lockedExternalTasks)
             {
@@ -78,7 +79,7 @@ namespace Camunda.Dispatcher
             }
         }
 
-        private static IEnumerable<FetchExternalTaskTopic> GetTopics()
+        private static IEnumerable<FetchExternalTaskTopic> GetTopicsFromExecutors()
         {
             return _taskExecutors.Select(worker => new FetchExternalTaskTopic(
                                         (worker.GetType().GetCustomAttributes(typeof(ExternalTaskTopicAttribute), true).FirstOrDefault() as ExternalTaskTopicAttribute)?.TopicName, 
