@@ -11,29 +11,29 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace SampleWebApi.Helpers
+namespace Camunda.Dispatcher
 {
     /// <summary>
     /// This helper will process all pending activities from camunda.
     /// </summary>
-    public class CamundaPollingService : BackgroundService
+    public class PollingService : BackgroundService
     {
         private static IEngineClient _engineClient;
         private static IExternalTaskClientHelper _engineClientHelper;
-        private static IEnumerable<IExternalTaskAdapter> _externalWorkers;
+        private static IEnumerable<IExternalTaskExecutor> _taskExecutors;
         private static ILogger _logger;
         private static CamundaSettings _camundaSettings;
 
-        public CamundaPollingService(IOptions<CamundaSettings> camundaSettings, 
+        public PollingService(IOptions<CamundaSettings> camundaSettings, 
             IEngineClient engineClient,
             IExternalTaskClientHelper engineClientHelper,
             ILogger logger,
-            IEnumerable<IExternalTaskAdapter> externalWorkers)
+            IEnumerable<IExternalTaskExecutor> taskExecutors)
         {
             _engineClient = engineClient;
             _engineClientHelper = engineClientHelper;
             _logger = logger;
-            _externalWorkers = externalWorkers;
+            _taskExecutors = taskExecutors;
             _camundaSettings = camundaSettings?.Value;
         }
 
@@ -80,7 +80,7 @@ namespace SampleWebApi.Helpers
 
         private static IEnumerable<FetchExternalTaskTopic> GetTopics()
         {
-            return _externalWorkers.Select(worker => new FetchExternalTaskTopic(
+            return _taskExecutors.Select(worker => new FetchExternalTaskTopic(
                                         (worker.GetType().GetCustomAttributes(typeof(ExternalTaskTopicAttribute), true).FirstOrDefault() as ExternalTaskTopicAttribute)?.TopicName, 
                                         _camundaSettings.ExternalTaskLockDuration)
             {

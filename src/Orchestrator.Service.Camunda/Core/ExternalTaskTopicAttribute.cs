@@ -6,38 +6,22 @@ namespace Camunda.Dispatcher.Core
     public sealed class ExternalTaskTopicAttribute : Attribute
     {
         public string TopicName { get; }
-        public string ProcessName { get; }
+        public string ProcessId { get; }
         public int Retries { get; } = 3;
         public long RetryTimeout { get; } = 30 * 1000;
 
-        public ExternalTaskTopicAttribute(string topicName, string processName)
+        public ExternalTaskTopicAttribute(string topicName, string processId)
         {
             TopicName = topicName;
-            ProcessName = processName;
+            ProcessId = processId;
         }
 
-        public ExternalTaskTopicAttribute(string topicName, string processName, int retries, long retryTimeout)
+        public ExternalTaskTopicAttribute(string topicName, string processId, int retries, long retryTimeout)
         {
             TopicName = topicName;
-            ProcessName = processName;
+            ProcessId = processId;
             Retries = retries;
             RetryTimeout = retryTimeout;
-        }
-    }
-
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
-    public sealed class ExternalTaskTopicIdentifierAttribute : Attribute
-    {
-        public string TopicIdentifier { get; set; }
-
-        public ExternalTaskTopicIdentifierAttribute(string topicIdentifier)
-        {
-            TopicIdentifier = topicIdentifier;
-        }
-
-        public ExternalTaskTopicIdentifierAttribute()
-        {
-
         }
     }
 }

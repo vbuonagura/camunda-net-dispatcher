@@ -10,11 +10,11 @@ using SampleWebApi.Models;
 namespace SampleWebApi.Dispatchers
 {
 
-    [ExternalTaskTopic("register-attribute", "yourProcessNameHere")]
-    public class RegisterAttribute : IExternalTaskAdapter
+    [ExternalTaskTopic("reinsurance-update-process-status", "reinsurance-risk-declaration")]
+    public class UpdateProcessStatus : IExternalTaskExecutor
     {
  
-        public RegisterAttribute()
+        public UpdateProcessStatus()
         {
         }
 

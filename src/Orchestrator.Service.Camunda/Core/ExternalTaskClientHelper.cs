@@ -13,31 +13,32 @@ namespace Camunda.Dispatcher.Core
     public class ExternalTaskClientHelper : IExternalTaskClientHelper
     {
         private readonly IEngineClient _engineClient;
-        private readonly IEnumerable<IExternalTaskAdapter> _externalWorkers;
+        private readonly IEnumerable<IExternalTaskExecutor> _externalTaskExecutors;
 
-        public ExternalTaskClientHelper(IEngineClient engineClient, IEnumerable<IExternalTaskAdapter> externalWorkers)
+        public ExternalTaskClientHelper(IEngineClient engineClient, IEnumerable<IExternalTaskExecutor> externalTaskExecutors)
         {
             _engineClient = engineClient;
-            _externalWorkers = externalWorkers;
+            _externalTaskExecutors = externalTaskExecutors;
         }
 
         #region PUBLIC METHODS
 
         public async Task ProcessLockedTasks(string workerId, LockedExternalTask lockedExternalTask)
         {
-            var worker = GetWorker(lockedExternalTask.TopicName);
-            var workerAttribute = GetWorkerAttributeData(worker);
+            var executor = GetExecutor(lockedExternalTask.TopicName);
+            var executorAttribute = GetExecutorAttributeData(executor);
             var externalTask = lockedExternalTask.ToExternalTask();
 
             try
             {
-                var resultVariables = await ExecuteExternalTask(lockedExternalTask, worker, externalTask);
+                var resultVariables = await ExecuteExternalTask(executor, externalTask);
 
                 var completeExternalTask = new CompleteExternalTask
                 {
                     WorkerId = workerId,
                     Variables = resultVariables.ToVariableDictionary()
                 };
+
                 await _engineClient.Client().ExternalTasks[externalTask.Id].Complete(completeExternalTask);
             }
             catch (ExternalTaskException ex)
@@ -46,7 +47,7 @@ namespace Camunda.Dispatcher.Core
             }
             catch (Exception ex)
             {
-                HandleException(workerId, workerAttribute, externalTask, ex);
+                HandleException(workerId, executorAttribute, externalTask, ex);
             }
         }
 
@@ -59,21 +60,22 @@ namespace Camunda.Dispatcher.Core
 
         #region PRIVATE METHODS
 
-        private IExternalTaskAdapter GetWorker(string topicName)
+        private IExternalTaskExecutor GetExecutor(string topicName)
         {
-            return _externalWorkers.First(externalWorker => (externalWorker.GetType().GetCustomAttributes(typeof(ExternalTaskTopicAttribute), true).FirstOrDefault()
-                                        as ExternalTaskTopicAttribute)?.TopicName == topicName);
+            return _externalTaskExecutors.First(executor => (executor.GetType().GetCustomAttributes(typeof(ExternalTaskTopicAttribute), true)
+                                        .FirstOrDefault() as ExternalTaskTopicAttribute)?.TopicName == topicName);
         }
         
-        private ExternalTaskTopicAttribute GetWorkerAttributeData(IExternalTaskAdapter worker)
+        private static ExternalTaskTopicAttribute GetExecutorAttributeData(IExternalTaskExecutor executor)
         {
-            return worker.GetType().GetCustomAttributes(typeof(ExternalTaskTopicAttribute), true).FirstOrDefault()
-                                        as ExternalTaskTopicAttribute;
+            return executor.GetType()
+                            .GetCustomAttributes(typeof(ExternalTaskTopicAttribute), true)
+                            .FirstOrDefault() as ExternalTaskTopicAttribute;
         }
         
-        private async Task<Dictionary<string, object>> ExecuteExternalTask(LockedExternalTask lockedExternalTask, IExternalTaskAdapter worker, ExternalTask externalTask)
+        private static async Task<Dictionary<string, object>> ExecuteExternalTask(IExternalTaskExecutor executor, ExternalTask externalTask)
         {
-            var result = await worker.Execute(externalTask);
+            var result = await executor.Execute(externalTask);
 
             return result;
         }
@@ -108,7 +110,6 @@ namespace Camunda.Dispatcher.Core
             };
 
             _engineClient.Client().ExternalTasks[externalTask.Id].HandleBpmnError(externalTaskBpmnError);
-
         }
 
         #endregion

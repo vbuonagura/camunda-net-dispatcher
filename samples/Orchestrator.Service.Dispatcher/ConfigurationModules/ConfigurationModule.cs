@@ -1,4 +1,5 @@
-﻿using Camunda.Dispatcher.Contracts;
+﻿using Camunda.Dispatcher;
+using Camunda.Dispatcher.Contracts;
 using Camunda.Dispatcher.Core;
 using Camunda.Dispatcher.Entities;
 using Microsoft.Extensions.Configuration;
@@ -19,13 +20,13 @@ namespace SampleWebApi.ConfigurationModules
                 .AddTransient<IEngineClient, EngineClient>()
                 .AddTransient<IExternalTaskClientHelper, ExternalTaskClientHelper>()
 
-                //Instantiate dispatcher
-                .AddTransient<IExternalTaskAdapter, RegisterAttribute>()
+                //Instantiate external task executors
+                .AddTransient<IExternalTaskExecutor, UpdateProcessStatus>()
 
                 .Configure<CamundaSettings>(configuration.GetSection("CamundaSettings"))
                 .Configure<ProxySettings>(configuration.GetSection("ProxySettings"))
 
-                .AddHostedService<CamundaPollingService>();
+                .AddHostedService<PollingService>();
 
         }
     }
