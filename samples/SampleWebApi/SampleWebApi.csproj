@@ -24,17 +24,17 @@
 
   <ItemGroup>
     <Compile Remove="Controllers\**" />
-    <Compile Remove="Dispatchers\Common\**" />
-    <Compile Remove="Dispatchers\RightRequest\**" />
+    <Compile Remove="Executors\Common\**" />
+    <Compile Remove="Executors\RightRequest\**" />
     <Content Remove="Controllers\**" />
-    <Content Remove="Dispatchers\Common\**" />
-    <Content Remove="Dispatchers\RightRequest\**" />
+    <Content Remove="Executors\Common\**" />
+    <Content Remove="Executors\RightRequest\**" />
     <EmbeddedResource Remove="Controllers\**" />
-    <EmbeddedResource Remove="Dispatchers\Common\**" />
-    <EmbeddedResource Remove="Dispatchers\RightRequest\**" />
+    <EmbeddedResource Remove="Executors\Common\**" />
+    <EmbeddedResource Remove="Executors\RightRequest\**" />
     <None Remove="Controllers\**" />
-    <None Remove="Dispatchers\Common\**" />
-    <None Remove="Dispatchers\RightRequest\**" />
+    <None Remove="Executors\Common\**" />
+    <None Remove="Executors\RightRequest\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,7 +48,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Orchestrator.Service.Camunda\Camunda.Dispatcher.csproj" />
+    <ProjectReference Include="..\..\src\Camunda.Dispatcher\Camunda.Dispatcher.csproj" />
   </ItemGroup>
 
   <ItemGroup>

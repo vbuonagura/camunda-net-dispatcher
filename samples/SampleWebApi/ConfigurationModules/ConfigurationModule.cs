@@ -4,7 +4,7 @@ using Camunda.Dispatcher.Core;
 using Camunda.Dispatcher.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SampleWebApi.Dispatchers;
+using SampleWebApi.Executors;
 
 namespace SampleWebApi.ConfigurationModules
 {

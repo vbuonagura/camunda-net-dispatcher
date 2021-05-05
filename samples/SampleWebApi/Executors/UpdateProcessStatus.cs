@@ -7,14 +7,14 @@ using Camunda.Dispatcher.Entities;
 using Camunda.Dispatcher.Helpers;
 using SampleWebApi.Models;
 
-namespace SampleWebApi.Dispatchers
+namespace SampleWebApi.Executors
 {
 
-    [ExternalTaskTopic("register-attribute", "reinsurance-risk-declaration")]
-    public class RegisterAttribute : IExternalTaskExecutor
+    [ExternalTaskTopic("reinsurance-update-process-status", "reinsurance-risk-declaration")]
+    public class UpdateProcessStatus : IExternalTaskExecutor
     {
  
-        public RegisterAttribute()
+        public UpdateProcessStatus()
         {
         }
 

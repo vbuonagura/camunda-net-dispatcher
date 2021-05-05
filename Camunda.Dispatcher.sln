@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.29509.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D2118ABB-6B3A-4411-91A6-335ED11E0B05}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleWebApi", "samples\Orchestrator.Service.Dispatcher\SampleWebApi.csproj", "{C16B1392-AE24-4C31-BF5A-F536CFF98344}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleWebApi", "samples\SampleWebApi\SampleWebApi.csproj", "{C16B1392-AE24-4C31-BF5A-F536CFF98344}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Camunda.Dispatcher", "src\Orchestrator.Service.Camunda\Camunda.Dispatcher.csproj", "{4DE43225-F21C-47C4-BEAB-92FD5FD32F69}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Camunda.Dispatcher", "src\Camunda.Dispatcher\Camunda.Dispatcher.csproj", "{4DE43225-F21C-47C4-BEAB-92FD5FD32F69}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{37B6CE95-ADF4-4F28-8918-AB44D93A697C}"
 EndProject
