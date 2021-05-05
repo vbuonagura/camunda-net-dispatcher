@@ -11,13 +11,13 @@ namespace Camunda.Dispatcher.Helpers
             var someObject = new T();
             var someObjectType = someObject.GetType();
 
-            foreach (var item in source)
+            foreach (var (key, value) in source)
             {
-                var prop = someObjectType.GetProperty(item.Key);
+                var prop = someObjectType.GetProperty(key);
                 if (prop == null)
                     continue;
 
-                prop.SetValue(someObject, (item.Value as VariableValue)?.Value, null);
+                prop.SetValue(someObject, (value as VariableValue)?.Value, null);
             }
 
             return someObject;
@@ -43,26 +43,31 @@ namespace Camunda.Dispatcher.Helpers
                     variables.Add(prop.Name, prop.GetValue(data));
                 }
             }
+
             return variables;
         }
 
         public static Dictionary<string, object> ToObjectDictionary(this IDictionary<string, VariableValue> source)
         {
             var result = new Dictionary<string, object>();
-            foreach (var item in source)
+            
+            foreach (var (key, value) in source)
             {
-                result.Add(item.Key, item.Value);
+                result.Add(key, value);
             }
+
             return result;
         }
 
         public static Dictionary<string, VariableValue> ToVariableDictionary(this IDictionary<string, object> source)
         {
             var result = new Dictionary<string, VariableValue>();
-            foreach (var item in source)
+           
+            foreach (var (key, value) in source)
             {
-                result.Add(item.Key, VariableValue.FromObject(item.Value));
+                result.Add(key, VariableValue.FromObject(value));
             }
+
             return result;
         }
     }

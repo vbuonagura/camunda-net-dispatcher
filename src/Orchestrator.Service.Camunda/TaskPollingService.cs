@@ -23,6 +23,7 @@ namespace Camunda.Dispatcher
         private static IEnumerable<IExternalTaskExecutor> _taskExecutors;
         private static CamundaSettings _camundaSettings;
         private readonly ILogger _logger;
+        private readonly IEnumerable<FetchExternalTaskTopic> _topics;
 
         public TaskPollingService(IOptions<CamundaSettings> camundaSettings, 
             IEngineClient engineClient,
@@ -35,6 +36,7 @@ namespace Camunda.Dispatcher
             _taskExecutors = taskExecutors;
             _logger = logger;
             _camundaSettings = camundaSettings?.Value;
+            _topics = GetTopicsFromExecutors();
         }
 
 
@@ -43,16 +45,14 @@ namespace Camunda.Dispatcher
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                var topics = GetTopicsFromExecutors();
-
-                foreach (var topic in topics)
+                foreach (var topic in _topics)
                 {
                     var fetchLockedExternalTasks = new List<LockedExternalTask>();
 
                     try
                     {
                         var workerId = Guid.NewGuid().ToString();
-                        fetchLockedExternalTasks = await FetchTask(workerId, topic);
+                        fetchLockedExternalTasks = await FetchAndLockTasks(workerId, topic);
 
                         if (fetchLockedExternalTasks.Any())
                         {
@@ -91,7 +91,7 @@ namespace Camunda.Dispatcher
             }).ToList();
         }
 
-        private static Task<List<LockedExternalTask>> FetchTask(string workerId, FetchExternalTaskTopic topic)
+        private static Task<List<LockedExternalTask>> FetchAndLockTasks(string workerId, FetchExternalTaskTopic topic)
         {
             var fetchingQuery = new FetchExternalTasks
             {

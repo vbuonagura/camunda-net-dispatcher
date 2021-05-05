@@ -6,8 +6,6 @@ namespace Camunda.Dispatcher.Contracts
     public interface IExternalTaskClientHelper
     {
         Task ProcessLockedTasks(string workerId, LockedExternalTask lockedExternalTask);
-
         Task UnlockExternalTasks(string externalTaskId);
-
     }
 }
