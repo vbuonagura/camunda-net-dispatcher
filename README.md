@@ -1,20 +1,9 @@
 # Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
-
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
-
+Fully working .NET 5 project that shows how to interact with Camunda to automatically execute Service Tasks and Receive Tasks
 # Build and Test
-TODO: Describe and show how to build your code and run the tests. 
-
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
-
-If you want to learn more about creating good readme files then refer the following [guidelines](https://www.visualstudio.com/en-us/docs/git/create-a-readme). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+Steps needed to run and test the project:
+1.	Installation Visual Studio with the latest version of .NET
+2.	Install Camunda (camunda-bpm-run version is enough but every version works)
+3.	Add the proper value to the appsettings.json to connect to Camunda
+4.	Create and deploy a BPMN process to Camunda with at least one service task with an external implementation and topic configured
+5.  Create an executor class in the SampleWebApi project to execute some test code
